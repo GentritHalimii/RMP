@@ -1,12 +1,7 @@
 namespace RMP.Host.Entities;
 
-public class UniversityEntity
+public class UniversityEntity : BaseEntity
 {
-    /// <summary>
-    /// Unique identifier for the university.
-    /// </summary>
-    public required Guid Id { get; set; }
-
     /// <summary>
     /// Name of the university.
     /// </summary>
