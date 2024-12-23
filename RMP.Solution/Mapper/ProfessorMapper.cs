@@ -1,5 +1,6 @@
 ﻿
 using Riok.Mapperly.Abstractions;
+using RMP.Host.Entities;
 using RMP.Host.Features.Professor.CreateProfessor;
 using RMP.Host.Features.Professor.GetProfessorById;
 using RMP.Host.Features.Professor.UpdateProfessor;

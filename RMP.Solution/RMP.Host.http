@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:5126
+@baseUrl = http://localhost:44364
 @uniId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
 
 ### Update University
@@ -21,7 +21,7 @@ GET {{baseUrl}}/api/GetUniversityById/{{uniId}}
 Accept: application/json
 
 ### GetAllUniversities
-GET http://localhost:5126/api/Universities
+GET {{baseUrl}}/api/Universities
 Accept: application/json
 
 ### DeleteUniversity

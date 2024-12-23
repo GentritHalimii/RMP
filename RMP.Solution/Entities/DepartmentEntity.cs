@@ -1,16 +1,18 @@
+using RMP.Host.Entities.Identity;
+
 namespace RMP.Host.Entities;
 
-public class DepartmentEntity
+public class DepartmentEntity : BaseEntity
 {
-    /// <summary>
-    /// Unique identifier for the department.
-    /// </summary>
-    public required Guid Id { get; set; }
-
     /// <summary>
     /// Name of the department.
     /// </summary>
     public required string Name { get; set; }
+    
+    /// <summary>
+    /// Foreign key from University
+    /// </summary>
+    public Guid UniversityId { get; set; }
 
     /// <summary>
     /// Year the department was established.
@@ -36,10 +38,14 @@ public class DepartmentEntity
     /// Total number of courses offered.
     /// </summary>
     public int CoursesNumber { get; set; }
-
-    /// <summary>
-    /// Path to the Department's profile photo (optional).
-    /// </summary>
     
-    public ICollection<DepartmentEntity> Departments { get; set; }
+    /// <summary>
+    /// The user associated with the department.
+    /// </summary>
+    public ICollection<UserEntity> Users { get; set; }
+    
+    /// <summary>
+    /// The university associated with the department.
+    /// </summary>
+    public UniversityEntity University { get; set; }
 }

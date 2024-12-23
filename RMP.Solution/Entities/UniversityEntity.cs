@@ -1,3 +1,5 @@
+using RMP.Host.Entities.Identity;
+
 namespace RMP.Host.Entities;
 
 public class UniversityEntity : BaseEntity
@@ -36,4 +38,14 @@ public class UniversityEntity : BaseEntity
     /// Path to the university's profile photo (optional).
     /// </summary>
     public string? ProfilePhotoPath { get; set; }
+    
+    /// <summary>
+    /// The department associated with the university.
+    /// </summary>
+    public ICollection<DepartmentEntity> Departments { get; set; }
+    
+    /// <summary>
+    /// The user associated with the university.
+    /// </summary>
+    public ICollection<UserEntity> Users { get; set; }
 }
