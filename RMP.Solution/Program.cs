@@ -1,12 +1,16 @@
 using Carter;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using RMP.Host.Abstarctions.ResultResponse;
 using RMP.Host.Database;
 using RMP.Host.Entities.Identity;
 using RMP.Host.Exceptions;
 using RMP.Host.Extensions;
+using RMP.Host.Features.Rating.CreateRate;
+using RMP.Host.Features.Rating.CreateRate.Strategy;
 using RMP.Host.Features.User.Common;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +50,12 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+builder.Services.AddTransient<RateHandlerStrategyResolver>();
+builder.Services.AddTransient<ConcreteRateProfessorStrategy>();
+builder.Services.AddTransient<ConcreteRateUniversityStrategy>();
+builder.Services.AddTransient<IRateHandlerStrategy, ConcreteRateProfessorStrategy>();
+builder.Services.AddTransient<IRateHandlerStrategy, ConcreteRateUniversityStrategy>();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });

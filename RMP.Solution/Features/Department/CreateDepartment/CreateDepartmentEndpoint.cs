@@ -13,6 +13,7 @@ public sealed class CreateDepartmentEndpoint : ICarterModule
     {
         app.MapPost("api/CreateDepartment", [IgnoreAntiforgeryToken] async (
                 string name,
+                Guid universityId,
                 int establishedYear,
                 string description,
                 int staffNumber,
@@ -25,6 +26,7 @@ public sealed class CreateDepartmentEndpoint : ICarterModule
                 var command = new CreateDepartmentCommand(
                     id,
                     name,
+                    universityId,
                     establishedYear,
                     description,
                     staffNumber,
@@ -34,7 +36,7 @@ public sealed class CreateDepartmentEndpoint : ICarterModule
                 var result = await sender.Send(command);
                 return result.Match(
                     onSuccess: () => Results.Created($"api/CreateDepartment/{result.Value.Id}", result.Value),
-                    onFailure: error => Results.BadRequest(error));
+                    onFailure: Results.BadRequest);
             })
             .WithName("CreateDepartment")
             .DisableAntiforgery()

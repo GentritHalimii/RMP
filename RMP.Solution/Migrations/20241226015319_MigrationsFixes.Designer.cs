@@ -11,14 +11,50 @@ using RMP.Host.Database;
 namespace RMP.Host.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241207202120_UserManagement")]
-    partial class UserManagement
+    [Migration("20241226015319_MigrationsFixes")]
+    partial class MigrationsFixes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
+
+            modelBuilder.Entity("RMP.Host.Entities.DepartmentEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CoursesNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EstablishedYear")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StaffNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("StudentsNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UniversityId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UniversityId");
+
+                    b.ToTable("Departments", (string)null);
+                });
 
             modelBuilder.Entity("RMP.Host.Entities.Identity.Role", b =>
                 {
@@ -161,6 +197,9 @@ namespace RMP.Host.Migrations
                     b.Property<string>("ProfilePhotoPath")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("RateUniversityId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -171,6 +210,9 @@ namespace RMP.Host.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("UniversityEntityId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("UniversityId")
                         .HasColumnType("TEXT");
 
@@ -180,12 +222,18 @@ namespace RMP.Host.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("RateUniversityId");
+
+                    b.HasIndex("UniversityEntityId");
 
                     b.HasIndex("UniversityId");
 
@@ -195,9 +243,11 @@ namespace RMP.Host.Migrations
             modelBuilder.Entity("RMP.Host.Entities.Identity.UserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -234,9 +284,11 @@ namespace RMP.Host.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
@@ -245,6 +297,124 @@ namespace RMP.Host.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.ProfessorEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Education")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProfilePhotoPath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Professors", (string)null);
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.RateProfessorEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CommunicationSkills")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Feedback")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("GradingFairness")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Overall")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ProfessorEntityId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProfessorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Responsiveness")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("UserEntityId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfessorEntityId");
+
+                    b.HasIndex("ProfessorId");
+
+                    b.HasIndex("UserEntityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RateProfessors", (string)null);
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.RateUniversityEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Feedback")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Overall")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("UniversityEntityId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UniversityId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UniversityEntityId");
+
+                    b.HasIndex("UniversityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RateUniversities", (string)null);
                 });
 
             modelBuilder.Entity("RMP.Host.Entities.UniversityEntity", b =>
@@ -281,6 +451,17 @@ namespace RMP.Host.Migrations
                     b.ToTable("Universities", (string)null);
                 });
 
+            modelBuilder.Entity("RMP.Host.Entities.DepartmentEntity", b =>
+                {
+                    b.HasOne("RMP.Host.Entities.UniversityEntity", "University")
+                        .WithMany("Departments")
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("University");
+                });
+
             modelBuilder.Entity("RMP.Host.Entities.Identity.RoleClaim", b =>
                 {
                     b.HasOne("RMP.Host.Entities.Identity.Role", null)
@@ -301,11 +482,29 @@ namespace RMP.Host.Migrations
 
             modelBuilder.Entity("RMP.Host.Entities.Identity.UserEntity", b =>
                 {
+                    b.HasOne("RMP.Host.Entities.DepartmentEntity", "Department")
+                        .WithMany("Users")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RMP.Host.Entities.RateUniversityEntity", "RateUniversity")
+                        .WithMany()
+                        .HasForeignKey("RateUniversityId");
+
+                    b.HasOne("RMP.Host.Entities.UniversityEntity", null)
+                        .WithMany("Users")
+                        .HasForeignKey("UniversityEntityId");
+
                     b.HasOne("RMP.Host.Entities.UniversityEntity", "University")
                         .WithMany()
                         .HasForeignKey("UniversityId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("RateUniversity");
 
                     b.Navigation("University");
                 });
@@ -341,6 +540,80 @@ namespace RMP.Host.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.RateProfessorEntity", b =>
+                {
+                    b.HasOne("RMP.Host.Entities.ProfessorEntity", null)
+                        .WithMany("RateProfessors")
+                        .HasForeignKey("ProfessorEntityId");
+
+                    b.HasOne("RMP.Host.Entities.ProfessorEntity", "Professor")
+                        .WithMany()
+                        .HasForeignKey("ProfessorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RMP.Host.Entities.Identity.UserEntity", null)
+                        .WithMany("RateProfessors")
+                        .HasForeignKey("UserEntityId");
+
+                    b.HasOne("RMP.Host.Entities.Identity.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Professor");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.RateUniversityEntity", b =>
+                {
+                    b.HasOne("RMP.Host.Entities.UniversityEntity", null)
+                        .WithMany("RateUniversities")
+                        .HasForeignKey("UniversityEntityId");
+
+                    b.HasOne("RMP.Host.Entities.UniversityEntity", "University")
+                        .WithMany()
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RMP.Host.Entities.Identity.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("University");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.DepartmentEntity", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.Identity.UserEntity", b =>
+                {
+                    b.Navigation("RateProfessors");
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.ProfessorEntity", b =>
+                {
+                    b.Navigation("RateProfessors");
+                });
+
+            modelBuilder.Entity("RMP.Host.Entities.UniversityEntity", b =>
+                {
+                    b.Navigation("Departments");
+
+                    b.Navigation("RateUniversities");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
