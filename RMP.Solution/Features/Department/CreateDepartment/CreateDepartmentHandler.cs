@@ -9,6 +9,7 @@ namespace RMP.Host.Features.Department.CreateDepartment;
 public sealed record CreateDepartmentCommand(
     Guid Id,
     string Name,
+    Guid UniversityId,
     int EstablishedYear,
     string Description,
     int StaffNumber,

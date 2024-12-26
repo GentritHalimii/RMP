@@ -15,4 +15,6 @@ public class ProfessorEntity : BaseEntity
     public string Role { get; set; }
     
     public string? ProfilePhotoPath { get; set; }
+    
+    public ICollection<RateProfessorEntity> RateProfessors { get; set; }
 }

@@ -45,6 +45,10 @@ public class UserEntity : IdentityUser<int>
     /// The department associated with the user.
     /// </summary>
     public DepartmentEntity? Department { get; set; }
+    
+    public RateUniversityEntity? RateUniversity { get; set; }
+
+    public ICollection<RateProfessorEntity>? RateProfessors { get; set; }
 }
 
 public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
