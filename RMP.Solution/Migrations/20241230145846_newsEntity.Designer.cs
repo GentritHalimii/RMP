@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RMP.Host.Database;
 
@@ -10,9 +11,11 @@ using RMP.Host.Database;
 namespace RMP.Host.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241230145846_newsEntity")]
+    partial class newsEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
@@ -51,21 +54,6 @@ namespace RMP.Host.Migrations
                     b.HasIndex("UniversityId");
 
                     b.ToTable("Departments", (string)null);
-                });
-
-            modelBuilder.Entity("RMP.Host.Entities.DepartmentProfessorEntity", b =>
-                {
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ProfessorId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("DepartmentId", "ProfessorId");
-
-                    b.HasIndex("ProfessorId");
-
-                    b.ToTable("DepartmentProfessorEntity");
                 });
 
             modelBuilder.Entity("RMP.Host.Entities.Identity.Role", b =>
@@ -503,25 +491,6 @@ namespace RMP.Host.Migrations
                     b.Navigation("University");
                 });
 
-            modelBuilder.Entity("RMP.Host.Entities.DepartmentProfessorEntity", b =>
-                {
-                    b.HasOne("RMP.Host.Entities.DepartmentEntity", "Department")
-                        .WithMany("DepartmentProfessors")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RMP.Host.Entities.ProfessorEntity", "Professor")
-                        .WithMany("DepartmentProfessors")
-                        .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Professor");
-                });
-
             modelBuilder.Entity("RMP.Host.Entities.Identity.RoleClaim", b =>
                 {
                     b.HasOne("RMP.Host.Entities.Identity.Role", null)
@@ -654,8 +623,6 @@ namespace RMP.Host.Migrations
 
             modelBuilder.Entity("RMP.Host.Entities.DepartmentEntity", b =>
                 {
-                    b.Navigation("DepartmentProfessors");
-
                     b.Navigation("Users");
                 });
 
@@ -666,8 +633,6 @@ namespace RMP.Host.Migrations
 
             modelBuilder.Entity("RMP.Host.Entities.ProfessorEntity", b =>
                 {
-                    b.Navigation("DepartmentProfessors");
-
                     b.Navigation("RateProfessors");
                 });
 
