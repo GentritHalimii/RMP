@@ -13,6 +13,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<ProfessorEntity> Professors { get; set; }
     public DbSet<RateUniversityEntity> RateUniversities { get; set; }
     public DbSet<RateProfessorEntity> RateProfessors { get; set; }
+    public DbSet<NewsEntity> News { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,6 +32,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<ProfessorEntity>().ToTable("Professors");
         modelBuilder.Entity<RateUniversityEntity>().ToTable("RateUniversities");
         modelBuilder.Entity<RateProfessorEntity>().ToTable("RateProfessors");
+        modelBuilder.Entity<NewsEntity>().ToTable("News");
         
         modelBuilder.Entity<UniversityEntity>()
             .HasKey(pk => new { pk.Id });
@@ -91,6 +93,21 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany()
             .HasForeignKey(r => r.ProfessorId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        // === DepartmentProfessorEntity Relationships === //
+        modelBuilder.Entity<DepartmentProfessorEntity>()
+            .HasKey(dp => new { dp.DepartmentId, dp.ProfessorId }); 
+
+        modelBuilder.Entity<DepartmentProfessorEntity>()
+            .HasOne(dp => dp.Department)
+            .WithMany(d => d.DepartmentProfessors)
+            .HasForeignKey(dp => dp.DepartmentId);
+
+        modelBuilder.Entity<DepartmentProfessorEntity>()
+            .HasOne(dp => dp.Professor)
+            .WithMany(p => p.DepartmentProfessors)
+            .HasForeignKey(dp => dp.ProfessorId);
+        
 
     }
 }
