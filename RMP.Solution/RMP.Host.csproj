@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
         <PackageReference Include="Carter" Version="8.0.0" />
@@ -27,7 +28,9 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-
+    <ItemGroup>
+        <Protobuf Include="Features\Rating\Extension.PredictionService\Protos\PredictionService.proto" GrpcServices="Client" />
+    </ItemGroup>
     <ItemGroup>
       <Folder Include="wwwroot\uploads\" />
     </ItemGroup>
