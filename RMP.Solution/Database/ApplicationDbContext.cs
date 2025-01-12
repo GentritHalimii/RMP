@@ -14,7 +14,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<RateUniversityEntity> RateUniversities { get; set; }
     public DbSet<RateProfessorEntity> RateProfessors { get; set; }
     public DbSet<NewsEntity> News { get; set; }
-    
+    public DbSet<CourseEntity> Courses { get; set; }
+    public DbSet<ProfessorCourseEntity> ProfessorCourses { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -33,7 +36,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<RateUniversityEntity>().ToTable("RateUniversities");
         modelBuilder.Entity<RateProfessorEntity>().ToTable("RateProfessors");
         modelBuilder.Entity<NewsEntity>().ToTable("News");
-        
+        modelBuilder.Entity<CourseEntity>().ToTable("Courses");
+        modelBuilder.Entity<ProfessorCourseEntity>().ToTable("ProfessorCourses");
+
         modelBuilder.Entity<UniversityEntity>()
             .HasKey(pk => new { pk.Id });
         modelBuilder.Entity<DepartmentEntity>()
@@ -107,7 +112,24 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(dp => dp.Professor)
             .WithMany(p => p.DepartmentProfessors)
             .HasForeignKey(dp => dp.ProfessorId);
-        
+
+        modelBuilder.Entity<CourseEntity>()
+           .HasOne(r => r.Department)
+           .WithMany()
+           .HasForeignKey(r => r.DepartmentID)
+           .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProfessorCourseEntity>()
+            .HasOne(r => r.Course)
+            .WithMany()
+            .HasForeignKey(r => r.CourseId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProfessorCourseEntity>()
+            .HasOne(r => r.Professor)
+            .WithMany()
+            .HasForeignKey(r => r.ProfessorId)
+            .OnDelete(DeleteBehavior.Cascade);
 
     }
 }
