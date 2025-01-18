@@ -3,7 +3,7 @@ using MediatR;
 using RMP.Host.Extensions;
 using RMP.Host.Mapper;
 
-namespace RMP.Host.Features.Professor.GetProfessorById;
+namespace RMP.Host.Features.Professor.GetProffesorById;
 
 public sealed record GetProfessorByIdResponse(
     Guid Id,

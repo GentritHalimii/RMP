@@ -1,13 +1,12 @@
-﻿namespace RMP.Host.Entities
-{
-    public class ProfessorCourseEntity
-    {
-        //Foreign Key
-        public Guid ProfessorId { get; set; }
+﻿namespace RMP.Host.Entities;
 
-        //Foreign Key
-        public Guid CourseId { get; set; }
-        public virtual ProfessorEntity Professor { get; set; }
-        public virtual CourseEntity Course { get; set; }
-    }
+public class ProfessorCourseEntity
+{
+    public Guid ProfessorId { get; set; }
+    
+    public Guid CourseId { get; set; }
+    
+    public virtual ProfessorEntity Professor { get; set; }
+    
+    public virtual CourseEntity Course { get; set; }
 }

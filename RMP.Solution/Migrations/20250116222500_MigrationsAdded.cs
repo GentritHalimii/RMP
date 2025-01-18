@@ -8,33 +8,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RMP.Host.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationsFixes : Migration
+    public partial class MigrationsAdded : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Departments",
+                name: "News",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    UniversityId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    EstablishedYear = table.Column<int>(type: "INTEGER", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    StaffNumber = table.Column<int>(type: "INTEGER", nullable: false),
-                    StudentsNumber = table.Column<int>(type: "INTEGER", nullable: false),
-                    CoursesNumber = table.Column<int>(type: "INTEGER", nullable: false)
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Content = table.Column<string>(type: "TEXT", nullable: false),
+                    PublicationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Category = table.Column<string>(type: "TEXT", nullable: false),
+                    ProfilePhotoPath = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Departments_Universities_UniversityId",
-                        column: x => x.UniversityId,
-                        principalTable: "Universities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_News", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,6 +63,24 @@ namespace RMP.Host.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Universities",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    EstablishedYear = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    StaffNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    StudentsNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    CoursesNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProfilePhotoPath = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Universities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 columns: table => new
                 {
@@ -87,6 +97,117 @@ namespace RMP.Host.Migrations
                         name: "FK_RoleClaims_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    UniversityId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    EstablishedYear = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    StaffNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    StudentsNumber = table.Column<int>(type: "INTEGER", nullable: false),
+                    CoursesNumber = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Departments_Universities_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "Universities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DepartmentID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    CreditHours = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    DepartmentEntityId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courses_Departments_DepartmentEntityId",
+                        column: x => x.DepartmentEntityId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Courses_Departments_DepartmentID",
+                        column: x => x.DepartmentID,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DepartmentProfessors",
+                columns: table => new
+                {
+                    DepartmentId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProfessorId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DepartmentProfessors", x => new { x.DepartmentId, x.ProfessorId });
+                    table.ForeignKey(
+                        name: "FK_DepartmentProfessors_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DepartmentProfessors_Professors_ProfessorId",
+                        column: x => x.ProfessorId,
+                        principalTable: "Professors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfessorCourses",
+                columns: table => new
+                {
+                    ProfessorId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CourseId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CourseEntityId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ProfessorEntityId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfessorCourses", x => new { x.CourseId, x.ProfessorId });
+                    table.ForeignKey(
+                        name: "FK_ProfessorCourses_Courses_CourseEntityId",
+                        column: x => x.CourseEntityId,
+                        principalTable: "Courses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProfessorCourses_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProfessorCourses_Professors_ProfessorEntityId",
+                        column: x => x.ProfessorEntityId,
+                        principalTable: "Professors",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProfessorCourses_Professors_ProfessorId",
+                        column: x => x.ProfessorId,
+                        principalTable: "Professors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -300,9 +421,39 @@ namespace RMP.Host.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Courses_DepartmentEntityId",
+                table: "Courses",
+                column: "DepartmentEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_DepartmentID",
+                table: "Courses",
+                column: "DepartmentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DepartmentProfessors_ProfessorId",
+                table: "DepartmentProfessors",
+                column: "ProfessorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Departments_UniversityId",
                 table: "Departments",
                 column: "UniversityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfessorCourses_CourseEntityId",
+                table: "ProfessorCourses",
+                column: "CourseEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfessorCourses_ProfessorEntityId",
+                table: "ProfessorCourses",
+                column: "ProfessorEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfessorCourses_ProfessorId",
+                table: "ProfessorCourses",
+                column: "ProfessorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RateProfessors_ProfessorEntityId",
@@ -424,8 +575,37 @@ namespace RMP.Host.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
+                name: "FK_Users_Departments_DepartmentId",
+                table: "Users");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_RateUniversities_Universities_UniversityEntityId",
+                table: "RateUniversities");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_RateUniversities_Universities_UniversityId",
+                table: "RateUniversities");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Users_Universities_UniversityEntityId",
+                table: "Users");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Users_Universities_UniversityId",
+                table: "Users");
+
+            migrationBuilder.DropForeignKey(
                 name: "FK_RateUniversities_Users_UserId",
                 table: "RateUniversities");
+
+            migrationBuilder.DropTable(
+                name: "DepartmentProfessors");
+
+            migrationBuilder.DropTable(
+                name: "News");
+
+            migrationBuilder.DropTable(
+                name: "ProfessorCourses");
 
             migrationBuilder.DropTable(
                 name: "RateProfessors");
@@ -446,16 +626,22 @@ namespace RMP.Host.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
+                name: "Courses");
+
+            migrationBuilder.DropTable(
                 name: "Professors");
 
             migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Departments");
 
             migrationBuilder.DropTable(
-                name: "Departments");
+                name: "Universities");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "RateUniversities");

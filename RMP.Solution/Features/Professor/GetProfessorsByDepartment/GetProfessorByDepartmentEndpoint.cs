@@ -1,12 +1,11 @@
 using Carter;
 using MediatR;
 using RMP.Host.Extensions;
-using RMP.Host.Features.Professor.GetProfessors;
 using RMP.Host.Mapper;
 
-namespace RMP.Host.Features.Professor.GetProffesors;
+namespace RMP.Host.Features.Professor.GetProfessorsByDepartment;
 
-public sealed record GetProfessorsResponse(
+public sealed record GetProfessorsByDepartmentResponse(
     Guid Id,
     string FirstName,
     string LastName,
@@ -16,24 +15,24 @@ public sealed record GetProfessorsResponse(
     string Role,
     string ProfilePhotoPath);
 
-public sealed class GetProfessorsEndpoint : ICarterModule
+public sealed class GetProfessorsByDepartmentEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/Professors", async (ISender sender) =>
+        app.MapGet("api/Professors/department/{departmentId}", async (ISender sender, Guid departmentId) =>
             {
-                var result = await sender.Send(new GetProfessorsQuery());
+                var result = await sender.Send(new GetProfessorsByDepartmentQuery(departmentId));
 
                 return result.Match(
                     onSuccess: () =>
                     {
-                        var professors = result.Value.Select(u => u.ToGetProfessorsResponse());
+                        var professors = result.Value.Select(u => u.ToGetProfessorsByDepartmentResponse());
                         return Results.Ok(professors);
                     },
                     onFailure: error => { return Results.BadRequest(error); });
             })
-            .WithName("GetProfessors")
-            .Produces<IEnumerable<GetProfessorsResponse>>(StatusCodes.Status200OK)
+            .WithName("GetProfessorsByDepartment")
+            .Produces<IEnumerable<GetProfessorsByDepartmentResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Get Professors")
             .WithDescription("Get Professors");

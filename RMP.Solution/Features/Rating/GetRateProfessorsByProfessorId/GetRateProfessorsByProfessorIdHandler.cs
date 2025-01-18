@@ -7,7 +7,7 @@ using RMP.Host.Mapper;
 
 namespace RMP.Host.Features.Rating.GetRateProfessorsByProfessorId;
 
-public sealed record GetRateProfessorsByProfessorIdQuery(Guid Id) : IQuery<Result<GetRateProfessorsByProfessorIdResult>>;
+public sealed record GetRateProfessorsByProfessorIdQuery(Guid Id) : IQuery<Result<IEnumerable<GetRateProfessorsByProfessorIdResult>>>;
 
 public sealed record GetRateProfessorsByProfessorIdResult(
     Guid Id,
@@ -20,17 +20,20 @@ public sealed record GetRateProfessorsByProfessorIdResult(
     int? GradingFairness
 );
 
-internal sealed class GetRateProfessorsByProfessorIdQueryHandler(ApplicationDbContext dbContext) : IQueryHandler<GetRateProfessorsByProfessorIdQuery, Result<GetRateProfessorsByProfessorIdResult>>
+internal sealed class GetRateProfessorsByProfessorIdQueryHandler(ApplicationDbContext dbContext) : IQueryHandler<GetRateProfessorsByProfessorIdQuery, Result<IEnumerable<GetRateProfessorsByProfessorIdResult>>>
 {
-    public async Task<Result<GetRateProfessorsByProfessorIdResult>> Handle(GetRateProfessorsByProfessorIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<GetRateProfessorsByProfessorIdResult>>> Handle(GetRateProfessorsByProfessorIdQuery query, CancellationToken cancellationToken)
     {
-        var professors = await dbContext
+        var ratings = await dbContext
             .RateProfessors
-            .FirstOrDefaultAsync(n => n.Id == query.Id, cancellationToken);
+            .Where(r => r.ProfessorId == query.Id)
+            .ToListAsync(cancellationToken);
 
-        if (professors is null)
-            return Result.Failure<GetRateProfessorsByProfessorIdResult>(RateProfessorsErrors.NotFound(query.Id));
+        if (!ratings.Any())
+            return Result.Failure<IEnumerable<GetRateProfessorsByProfessorIdResult>>(RateProfessorsErrors.NotFound(query.Id));
+        
+        var results = ratings.Select(u => u.ToGetRateProfessorsByProfessorIdResult());
 
-        return professors.ToGetRateProfessorsByProfessorIdResult();
+        return Result.Success(results);
     }
 }

@@ -20,17 +20,17 @@ public sealed class GetRateProfessorsByProfessorIdEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("api/GetRateProfessorsByProfessorId/{id}", async (Guid id, ISender sender) =>
-        {
-            var result = await sender.Send(new GetRateProfessorsByProfessorIdQuery(id));
+            {
+                var result = await sender.Send(new GetRateProfessorsByProfessorIdQuery(id));
 
-            return result.Match(
-                onSuccess: () => Results.Ok(result.Value.ToGetRateProfessorsByProfessorIdResponse()),
-                onFailure: error => Results.BadRequest(error));
-        })
+                return result.Match(
+                    onSuccess: () => Results.Ok(result.Value.Select(r => r.ToGetRateProfessorsByProfessorIdResponse())),
+                    onFailure: error => Results.BadRequest(error));
+            })
             .WithName("GetRateProfessorsByProfessorId")
-            .Produces<GetRateProfessorsByProfessorIdResponse>(StatusCodes.Status200OK)
+            .Produces<IEnumerable<GetRateProfessorsByProfessorIdResponse>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .WithSummary("Get RateProfessors by Id")
-            .WithDescription("Get RateProfessors by Id");
+            .WithSummary("Get all RateProfessors by Professor Id")
+            .WithDescription("Retrieve all RateProfessors ratings by the given Professor Id");
     }
 }
