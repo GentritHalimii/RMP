@@ -7,7 +7,7 @@ using RMP.Host.Mapper;
 
 namespace RMP.Host.Features.Rating.GetRateProfessorsByStudentId;
 
-public sealed record GetRateProfessorsByStudentIdQuery(Guid Id) : IQuery<Result<GetRateProfessorsByStudentIdResult>>;
+public sealed record GetRateProfessorsByStudentIdQuery(int Id) : IQuery<Result<IEnumerable<GetRateProfessorsByStudentIdResult>>>;
 
 public sealed record GetRateProfessorsByStudentIdResult(
     Guid Id,
@@ -20,17 +20,20 @@ public sealed record GetRateProfessorsByStudentIdResult(
     int? GradingFairness
 );
 
-internal sealed class GetRateProfessorsByStudentIdQueryHandler(ApplicationDbContext dbContext) : IQueryHandler<GetRateProfessorsByStudentIdQuery, Result<GetRateProfessorsByStudentIdResult>>
+internal sealed class GetRateProfessorsByStudentIdQueryHandler(ApplicationDbContext dbContext) : IQueryHandler<GetRateProfessorsByStudentIdQuery, Result<IEnumerable<GetRateProfessorsByStudentIdResult>>>
 {
-    public async Task<Result<GetRateProfessorsByStudentIdResult>> Handle(GetRateProfessorsByStudentIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<GetRateProfessorsByStudentIdResult>>> Handle(GetRateProfessorsByStudentIdQuery query, CancellationToken cancellationToken)
     {
-        var news = await dbContext
+        var ratings = await dbContext
             .RateProfessors
-            .FirstOrDefaultAsync(n => n.Id == query.Id, cancellationToken);
+            .Where(r => r.UserId == query.Id)
+            .ToListAsync(cancellationToken);
 
-        if (news is null)
-            return Result.Failure<GetRateProfessorsByStudentIdResult>(RateProfessorsErrors.NotFound(query.Id));
+        if (!ratings.Any())
+            return Result.Failure<IEnumerable<GetRateProfessorsByStudentIdResult>>(RateProfessorsErrors.NotFound(query.Id));
+        
+        var results = ratings.Select(u => u.ToGetRateProfessorsByStudentIdResult());
 
-        return news.ToGetRateProfessorsByStudentIdResult();
+        return Result.Success(results);
     }
 }

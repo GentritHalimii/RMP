@@ -16,6 +16,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<NewsEntity> News { get; set; }
     public DbSet<CourseEntity> Courses { get; set; }
     public DbSet<ProfessorCourseEntity> ProfessorCourses { get; set; }
+    public DbSet<DepartmentProfessorEntity> DepartmentProfessors { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,6 +39,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<NewsEntity>().ToTable("News");
         modelBuilder.Entity<CourseEntity>().ToTable("Courses");
         modelBuilder.Entity<ProfessorCourseEntity>().ToTable("ProfessorCourses");
+        modelBuilder.Entity<DepartmentProfessorEntity>().ToTable("DepartmentProfessors");
 
         modelBuilder.Entity<UniversityEntity>()
             .HasKey(pk => new { pk.Id });
@@ -118,7 +120,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            .WithMany()
            .HasForeignKey(r => r.DepartmentID)
            .OnDelete(DeleteBehavior.Cascade);
-
+        
+        modelBuilder.Entity<ProfessorCourseEntity>()
+            .HasKey(dp => new { dp.CourseId, dp.ProfessorId }); 
+        
         modelBuilder.Entity<ProfessorCourseEntity>()
             .HasOne(r => r.Course)
             .WithMany()
@@ -130,6 +135,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany()
             .HasForeignKey(r => r.ProfessorId)
             .OnDelete(DeleteBehavior.Cascade);
-
     }
 }
