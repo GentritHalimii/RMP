@@ -18,8 +18,8 @@ public sealed class CreateProfessorEndpoint : ICarterModule
                 [FromForm] string email,
                 [FromForm] string education,
                 [FromForm] string role,
-
                 IFormFile? file,
+                Guid departmentId,
                 ISender sender) =>
             {
                 Guid id = Guid.NewGuid();
@@ -35,6 +35,7 @@ public sealed class CreateProfessorEndpoint : ICarterModule
                     email,
                     education,
                     role,
+                    departmentId,
                     photoPath ?? string.Empty);
 
                 var result = await sender.Send(command);

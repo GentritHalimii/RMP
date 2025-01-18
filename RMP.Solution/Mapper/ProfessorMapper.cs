@@ -2,9 +2,11 @@
 using Riok.Mapperly.Abstractions;
 using RMP.Host.Entities;
 using RMP.Host.Features.Professor.CreateProfessor;
-using RMP.Host.Features.Professor.GetProfessorById;
 using RMP.Host.Features.Professor.UpdateProfessor;
 using RMP.Host.Features.Professor.GetProfessors;
+using RMP.Host.Features.Professor.GetProfessorsByDepartment;
+using RMP.Host.Features.Professor.GetProffesorById;
+using RMP.Host.Features.Professor.GetProffesors;
 
 namespace RMP.Host.Mapper;
 
@@ -18,4 +20,6 @@ public static partial class ProfessorMapper
     public static partial GetProfessorByIdResponse ToGetProfessorByIdResponse(this GetProfessorByIdResult result);
     public static partial GetProfessorsResult ToGetProfessorsResult(this ProfessorEntity professor);
     public static partial GetProfessorsResponse ToGetProfessorsResponse(this GetProfessorsResult result);
+    public static partial GetProfessorsByDepartmentResult ToGetProfessorsByDepartmentResult(this ProfessorEntity professor);
+    public static partial GetProfessorsByDepartmentResponse ToGetProfessorsByDepartmentResponse(this GetProfessorsByDepartmentResult professor);
 }

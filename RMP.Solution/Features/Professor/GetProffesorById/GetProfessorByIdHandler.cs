@@ -5,7 +5,7 @@ using RMP.Host.Database;
 using RMP.Host.Features.Proffesor;
 using RMP.Host.Mapper;
 
-namespace RMP.Host.Features.Professor.GetProfessorById;
+namespace RMP.Host.Features.Professor.GetProffesorById;
 public sealed record GetProfessorByIdQuery(Guid Id) : IQuery<Result<GetProfessorByIdResult>>;
 public sealed record GetProfessorByIdResult(
     Guid Id,

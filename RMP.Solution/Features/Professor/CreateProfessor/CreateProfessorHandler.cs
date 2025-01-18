@@ -2,6 +2,7 @@
 using RMP.Host.Abstarctions.CQRS;
 using RMP.Host.Abstarctions.ResultResponse;
 using RMP.Host.Database;
+using RMP.Host.Entities;
 using RMP.Host.Mapper;
 
 namespace RMP.Host.Features.Professor.CreateProfessor;
@@ -14,6 +15,7 @@ public sealed record CreateProfessorCommand(
     string Email,
     string Education,
     string Role,
+    Guid DepartmentId,
     string ProfilePhotoPath) : ICommand<Result<CreateProfessorResult>>;
 
 public sealed record CreateProfessorResult(Guid Id);
@@ -39,6 +41,14 @@ internal sealed class CreateProfessorCommandHandler(ApplicationDbContext dbConte
         var professor = command.ToProfessorEntity();
 
         dbContext.Professors.Add(professor);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        
+        var departmentProfessor = new DepartmentProfessorEntity
+        {
+            ProfessorId = command.Id,
+            DepartmentId = command.DepartmentId,
+        };
+        dbContext.DepartmentProfessors.Add(departmentProfessor);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return new CreateProfessorResult(professor.Id);
