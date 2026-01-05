@@ -120,9 +120,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
            .WithMany()
            .HasForeignKey(r => r.DepartmentID)
            .OnDelete(DeleteBehavior.Cascade);
-        
+
+        // === ProfessorCourseEntity Relationships === //
         modelBuilder.Entity<ProfessorCourseEntity>()
-            .HasKey(dp => new { dp.CourseId, dp.ProfessorId }); 
+            .HasKey(pc => new { pc.ProfessorId, pc.CourseId });
         
         modelBuilder.Entity<ProfessorCourseEntity>()
             .HasOne(r => r.Course)
@@ -135,5 +136,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany()
             .HasForeignKey(r => r.ProfessorId)
             .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

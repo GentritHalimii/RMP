@@ -2,6 +2,7 @@ using Carter;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using RMP.Host.Database;
 using RMP.Host.Entities.Identity;
@@ -112,6 +113,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+    /*app.UseSwagger();
+    app.UseSwaggerUI();*/
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseHealthChecks();

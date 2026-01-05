@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  rmp-api:
+    build: .
+    container_name: rmp-api
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      # Path to SQLite database inside container
+      ConnectionStrings__SQLConnection: "/data/rmpu.db"
+    volumes:
+      # Mount a local folder to persist SQLite DB
+      - ./data:/data
+    command: ["dotnet", "RMP.Host.dll"]
